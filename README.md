@@ -21,7 +21,7 @@ Hệ thống quản lý nhân sự toàn diện được xây dựng với **ASP
 ## 🏗️ Cấu trúc Backend
 
 ```
-HRM.Backend/
+Backend/
 ├── HRM.DataLayer/              # Entity Models, DbContext
 │   ├── Entities/               # Entity classes (User, Employee, Attendance, etc.)
 │   └── Data/                   # HRMDbContext
@@ -36,11 +36,13 @@ HRM.Backend/
 │   ├── Validators/             # FluentValidation
 │   └── Mappings/               # AutoMapper profiles
 │
-└── HRM.API/                    # Web API (TODO)
-    ├── Controllers/            # API Controllers
-    ├── Hubs/                   # SignalR Hubs (Chat, Notifications)
-    ├── Middleware/             # Custom middleware
-    └── Program.cs              # Application configuration
+├── HRM.API/                    # Web API (TODO)
+│   ├── Controllers/            # API Controllers
+│   ├── Hubs/                   # SignalR Hubs (Chat, Notifications)
+│   ├── Middleware/             # Custom middleware
+│   └── Program.cs              # Application configuration
+│
+└── HRM.sln                     # Solution file
 ```
 
 ---
@@ -163,7 +165,7 @@ Tôi sẽ tạo:
 
 ### Bước 3: Database Migration
 ```bash
-cd HRM.API
+cd Backend/HRM.API
 dotnet ef migrations add InitialCreate --project ../HRM.DataLayer
 dotnet ef database update
 ```
