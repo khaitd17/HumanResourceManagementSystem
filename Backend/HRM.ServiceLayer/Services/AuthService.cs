@@ -30,15 +30,33 @@ public class AuthService : IAuthService
     {
         try
         {
+            Console.WriteLine($"[DEBUG] Login attempt for username: {request.Username}");
+            
             var user = await _unitOfWork.Users.GetByUsernameAsync(request.Username);
+            
+            Console.WriteLine($"[DEBUG] User found: {user != null}");
+            
+            if (user != null)
+            {
+                Console.WriteLine($"[DEBUG] User.Username: {user.Username}");
+                Console.WriteLine($"[DEBUG] User.IsActive: {user.IsActive}");
+                Console.WriteLine($"[DEBUG] User.PasswordHash length: {user.PasswordHash?.Length ?? 0}");
+                Console.WriteLine($"[DEBUG] User.PasswordHash: {user.PasswordHash}");
+                
+                var inputHash = HashPassword(request.Password);
+                Console.WriteLine($"[DEBUG] Input password hash: {inputHash}");
+                Console.WriteLine($"[DEBUG] Hashes match: {inputHash == user.PasswordHash}");
+            }
 
             if (user == null || !VerifyPassword(request.Password, user.PasswordHash))
             {
+                Console.WriteLine($"[DEBUG] Login failed: user is null or password mismatch");
                 return ServiceResult<LoginResponseDto>.FailureResult("Invalid username or password");
             }
 
             if (!user.IsActive)
             {
+                Console.WriteLine($"[DEBUG] Login failed: account inactive");
                 return ServiceResult<LoginResponseDto>.FailureResult("Account is inactive");
             }
 
@@ -56,10 +74,13 @@ public class AuthService : IAuthService
             // Log audit
             await LogAuditAsync(user.Id, "Login", "Users", user.Id);
 
+            Console.WriteLine($"[DEBUG] Login successful for user: {user.Username}");
             return ServiceResult<LoginResponseDto>.SuccessResult(response, "Login successful");
         }
         catch (Exception ex)
         {
+            Console.WriteLine($"[DEBUG] Login exception: {ex.Message}");
+            Console.WriteLine($"[DEBUG] Stack trace: {ex.StackTrace}");
             return ServiceResult<LoginResponseDto>.FailureResult($"Login failed: {ex.Message}");
         }
     }

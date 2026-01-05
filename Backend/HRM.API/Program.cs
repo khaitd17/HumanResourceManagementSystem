@@ -74,7 +74,7 @@ builder.Services.AddAuthorization();
 
 // Add CORS
 var allowedOrigins = builder.Configuration.GetSection("Cors:AllowedOrigins").Get<string[]>() 
-    ?? new[] { "http://localhost:4200" };
+    ?? new[] { "http://localhost:4200", "http://localhost:8000", "http://127.0.0.1:8000" };
 
 builder.Services.AddCors(options =>
 {
@@ -148,7 +148,7 @@ if (app.Environment.IsDevelopment())
     });
 }
 
-app.UseHttpsRedirection();
+// app.UseHttpsRedirection();
 
 app.UseCors("AllowAngular");
 
